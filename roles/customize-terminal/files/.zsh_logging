@@ -1,0 +1,5 @@
+preexec() {
+	echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> $HOME/$(date '+%Y-%m-%d').log
+}
+
+exec &> >(tee -a "$HOME/$(date '+%Y-%m-%d').log")

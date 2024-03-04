@@ -1,0 +1,6 @@
+---
+- name: Install Go Tools
+  shell: go install {{ item }}@master
+  loop:
+    - github.com/ropnop/kerbrute
+    # - github.com/sensepost/gowitness # Currently installed as docker container

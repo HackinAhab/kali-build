@@ -1,2 +1,8 @@
 ---
 # handlers file for configure-system
+- name: "Restart lightdm"
+  become: true
+  become_method: sudo
+  service:
+    name: lightdm
+    state: restarted

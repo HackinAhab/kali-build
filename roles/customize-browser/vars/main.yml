@@ -14,3 +14,5 @@ FirefoxPlugins:
   - "darkreader"
   - "foxyproxy-standard"
   - "wappalyzer"
+  - "cookie-quick-manager"
+  - "user-agent-string-switcher"

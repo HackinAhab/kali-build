@@ -1,0 +1,27 @@
+---
+- name: Install Flatpak
+  block:
+  - name: Install packages
+    package:
+      name: 
+      - flatpak
+      - gnome-software-plugin-flatpak
+      state: present
+    become: true
+    become_method: sudo
+  - name: Add Flathub repository
+    flatpak_remote:
+      name: flathub
+      flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+      state: present
+      method: system
+    become: true
+    become_method: sudo
+
+- name: Install Obsidian
+  flatpak:
+    name: md.obsidian.Obsidian
+    state: present
+    remote: flathub
+  become: true
+  become_method: sudo

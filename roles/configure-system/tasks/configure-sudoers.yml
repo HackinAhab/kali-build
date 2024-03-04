@@ -10,3 +10,4 @@
   when: ansible_user_id != 'root'
   with_items:
     - "{{ ansible_user_id }}\tALL=(ALL) NOPASSWD:ALL"
+

@@ -1,0 +1,84 @@
+---
+- name: Install dependancies
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    state: present
+  become: true
+  become_method: sudo
+
+- name: Add Docker GPG key
+  ansible.builtin.get_url:
+    url: https://download.docker.com/linux/debian/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '644'
+  become: true
+  become_method: sudo
+
+- name: Add Docker repository
+  ansible.builtin.apt_repository:
+    repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian bookworm stable
+    state: present
+  become: true
+  become_method: sudo
+
+- name: Install Docker
+  become: true
+  become_method: sudo
+  ansible.builtin.package:
+    update_cache: true
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+      - docker-buildx-plugin
+    state: present
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user_id }}"
+    groups: docker
+    append: true
+    state: present
+  become: true
+  become_method: sudo
+
+- name: Enable Docker
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+  become: true
+  become_method: sudo
+
+- name: Enable Containerd
+  ansible.builtin.service:
+    name: containerd
+    state: started
+    enabled: true
+  become: true
+  become_method: sudo
+
+- name: Move Gowitness to /opt
+  copy: 
+    src: "{{ role_path }}/files/gowitness"
+    dest: /opt/
+    mode: 0755
+  become: true
+  become_method: sudo
+
+- name: Docker Compose up gowitness
+  community.docker.docker_compose_v2:
+    project_src: "/opt/gowitness"
+    state: present
+  register: output
+  become: true
+
+- name: Show output
+  debug:
+    var: output

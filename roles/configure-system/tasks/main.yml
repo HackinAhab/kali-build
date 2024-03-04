@@ -1,2 +1,4 @@
 ---
-- include: "configure-sudoers.yml"
+- include_tasks: "configure-sudoers.yml"
+- include_tasks: "set-flameshot.yml"
+- include_tasks: "set-autologin.yml"

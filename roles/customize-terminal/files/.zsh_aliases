@@ -1,0 +1,48 @@
+gowitness-load () {
+	if [[ $# -ne 1 ]];then
+		echo "Invalid Input: Must supply full or ./ path to nmap XML File"
+		echo "Command loads the specified Nmap XML output into Gowitness for scanning"
+	else
+		sudo docker run --rm -v /opt/gowitness:/data -p7171:7171 leonjza/gowitness gowitness nmap -f $1
+	fi
+}
+
+gowitness-up () {
+	if [ ! -f /opt/gowitness/gowitness.sqlite3 ]; then
+		touch /opt/gowitness/gowitness.sqlite3
+	fi
+	docker compose -f /opt/gowitness/docker-compose.yml up -d --force-recreate
+}
+
+alias sudo='sudo '
+
+#Ansible
+alias a="ansible"
+alias ap="ansible-playbook"
+alias av="ansible-vault"
+
+#Kubernetes
+alias k='kubectl'
+alias kg='kubectl get'
+alias kl='kubectl logs'
+alias ka='kubectl apply -f'
+alias kd='kubectl delete -f'
+function kc () {
+  kubectl config set-context --current --namespace="$1";
+}
+alias b64=' b64'
+function b64 () {
+  echo $1 | base64 -w 999999
+}
+alias kall='kubectl api-resources --verbs=list --namespaced -o name  | xargs -n 1 kubectl get --show-kind --ignore-not-found  -n'
+
+# Docker
+alias d="docker"
+alias dc="docker-compose"
+
+#General
+alias update='sudo apt update && sudo apt upgrade'
+alias bat='batcat'
+alias g="git"
+alias c="clear"
+alias h="history"
