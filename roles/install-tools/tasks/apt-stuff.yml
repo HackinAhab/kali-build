@@ -18,6 +18,7 @@
       - flameshot
       - exiftool
       - flatpak
+      - golang-go
     state: latest
   become: true
   become_method: sudo

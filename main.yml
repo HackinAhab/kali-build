@@ -3,10 +3,10 @@
   hosts: localhost
   connection: local
   roles:
-    # - role: "roles/install-tools"
-    # - role: "roles/configure-tmux"
-    # - role: "roles/customize-terminal"
-    # - role: "roles/customize-browser"
+    - role: "roles/install-tools"
+    - role: "roles/configure-tmux"
+    - role: "roles/customize-terminal"
+    - role: "roles/customize-browser"
     # - role: "roles/configure-logging"
     - role: "roles/configure-system"
     - role: gantsign.visual-studio-code
