@@ -1,0 +1,6 @@
+---
+- name: Set Timezone
+  timezone:
+    name: "America/North_Dakota/Center"
+  become: true
+  become_method: sudo

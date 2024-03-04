@@ -1,2 +1,57 @@
 ---
 # vars file for install-tools
+python_pip_packages:
+  - pwntools
+  - requests
+
+apt_packages:
+  - jq
+  - pipx
+  - ntpdate
+  - flameshot
+  - exiftool
+  - flatpak
+  - golang-go
+  - bat
+  - awscli
+  - azure-cli
+  - pacu
+  - xclip
+  - ghidra
+  - gobuster
+  - hexedit
+  - smbclient
+
+pipx_packages:
+    - { name: 'impacket', source: 'git+https://github.com/fortra/impacket.git' }
+    - { name: 'netexec', source: 'git+https://github.com/Pennyw0rth/NetExec' }
+    - { name: 'certipy-ad', source: 'git+https://github.com/ly4k/Certipy.git' }
+
+github_releases:
+    - { repo: "jpillora/chisel",  regex: "_linux_amd64.gz", location: "/opt/chisel" }
+    - { repo: "jpillora/chisel",  regex: "_windows_amd64.gz", location: "/opt/chisel" }
+    #- { repo: "jpillora/chisel",  regex: "_darwin_amd64", location: "/opt/chisel", filename: "chisel_osx" }
+    - { repo: "carlospolop/PEASS-ng",  regex: "linpeas.sh", location: "/opt/peas" }
+    - { repo: "carlospolop/PEASS-ng",  regex: "winPEASx64.exe", location: "/opt/peas" }
+    - { repo: "WithSecureLabs/chainsaw",  regex: "chainsaw_all_", location: "/opt/" }
+    # - { repo: "BloodHoundAD/BloodHound", regex: "BloodHound-linux-x64.zip", location: "/opt/" }
+
+github_repos:
+    - { repo: "https://github.com/danielmiessler/SecLists", location: "/opt/SecLists" }
+    - { repo: "https://github.com/WithSecureLabs/awspx", location: "/opt/awspx" }
+
+gem_packages:
+  - logger
+  - stringio
+  - winrm
+  - builder
+  - erubi
+  - gssapi
+  - gyoku
+  - httpclient
+  - logging
+  - little-plugger
+  - nori
+  - rubyntlm
+  - winrm-fs
+  - evil-winrm

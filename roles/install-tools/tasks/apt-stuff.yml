@@ -11,14 +11,7 @@
   
 - name: "Installing Packages"
   package:
-    name:
-      - jq
-      - pipx
-      - ntpdate
-      - flameshot
-      - exiftool
-      - flatpak
-      - golang-go
+    name: "{{ apt_packages }}"
     state: latest
   become: true
   become_method: sudo

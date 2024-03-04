@@ -3,5 +3,5 @@
   become: true
   lineinfile:
     dest: "{{ ansible_env.HOME }}/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-keyboard-shortcuts.xml"
-    regexp: "<property name=\"<Primary>Print\" type=\"string\" value=\"xfce4-screenshooter -f\"/>"
+    regexp: "<property name=\"<Primary>Print\" type=\"string\" value=\"/usr/share/kali-themes/xfce4-screenshooter --window\"/>"
     line: "<property name=\"<Primary>Print\" type=\"string\" value=\"flameshot gui\"/>"

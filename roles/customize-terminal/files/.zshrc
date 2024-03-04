@@ -270,6 +270,7 @@ fi
 source $HOME/.zsh_aliases
 # source .zsh_logging
 export HISTTIMEFORMAT="%d/%m/%y %T  "
+export PATH="$HOME/.local/bin:$PATH"
 
 function check_eth { 
 	ethtool $1 

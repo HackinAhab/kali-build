@@ -78,7 +78,3 @@
     state: present
   register: output
   become: true
-
-- name: Show output
-  debug:
-    var: output
