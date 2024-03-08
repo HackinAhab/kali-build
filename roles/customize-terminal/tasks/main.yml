@@ -19,3 +19,9 @@
     src: "{{ role_path }}/files/qterminal.ini"
     dest: "{{ ansible_env.HOME }}/.config/qterminal.org/qterminal.ini"
 
+- name: "Copy xfce4 files"
+  copy:
+    src: "{{ role_path }}/files/xfce4"
+    dest: "{{ ansible_env.HOME }}/.config/"
+  notify: Restart Lightdm
+
