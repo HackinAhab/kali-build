@@ -17,4 +17,11 @@
             - ms-python.python
             - GitHub.copilot
             - snyk-security.snyk-vulnerability-scanner
+  post_tasks:
+  - name: "Restart lightdm"
+    become: true
+    become_method: sudo
+    service:
+      name: lightdm
+      state: restarted
 

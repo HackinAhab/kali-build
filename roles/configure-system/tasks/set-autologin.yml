@@ -6,4 +6,3 @@
     path: /etc/lightdm/lightdm.conf
     regexp: "^#autologin-user="
     line: "autologin-user={{ ansible_user_id }}"
-  notify: "Restart lightdm"

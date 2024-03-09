@@ -3,6 +3,7 @@
   git:
     repo: "{{ item.repo }}"
     dest: "{{ item.location }}"
+    force: true
   with_items:
     - "{{ github_repos }}"
   become: true

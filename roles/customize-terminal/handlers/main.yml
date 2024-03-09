@@ -1,8 +1,10 @@
 ---
 # handlers file for customize-terminal
-- name: Restart Lightdm
-  systemd_service:
-    name: lightdm
-    state: restarted
-  become: true
-  become_method: sudo
+# - name: Restart Lightdm
+#   systemd_service:
+#     name: lightdm
+#     state: restarted
+#   become: true
+#   become_method: sudo
+#   register: lightdm_restart
+#   until: lightdm_restart is succeeded

@@ -1,27 +1,36 @@
 ---
 - name: "Copy zshrc"
-  copy:
+  file:
     src: "{{ role_path }}/files/.zshrc"
-    dest: "{{ ansible_env.HOME }}"
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    state: link
+    force: true
 
 - name: "Copy .zsh_aliases"
-  copy:
+  file:
     src: "{{ role_path }}/files/.zsh_aliases"
-    dest: "{{ ansible_env.HOME }}"
+    dest: "{{ ansible_env.HOME }}/.zsh_aliases"
+    state: link
+    force: true
 
 - name: "Copy .zsh_logging"
-  copy:
+  file:
     src: "{{ role_path }}/files/.zsh_logging"
-    dest: "{{ ansible_env.HOME }}"
+    dest: "{{ ansible_env.HOME }}/.zsh_logging"
+    state: link
+    force: true
 
 - name: "Copy Terminal theme"
-  copy:
+  file:
     src: "{{ role_path }}/files/qterminal.ini"
     dest: "{{ ansible_env.HOME }}/.config/qterminal.org/qterminal.ini"
+    state: link
+    force: true
 
-- name: "Copy xfce4 files"
-  copy:
-    src: "{{ role_path }}/files/xfce4"
-    dest: "{{ ansible_env.HOME }}/.config/"
-  notify: Restart Lightdm
+# - name: "Copy xfce4 files"
+#   copy:
+#     src: "{{ role_path }}/files/xfce4"
+#     dest: "{{ ansible_env.HOME }}/.config/"
 
+- name: "Load XFCE4 Profile"
+  shell: "xfce4-panel-profiles load {{ role_path }}/files/xfce4-custom.tar.bz2"

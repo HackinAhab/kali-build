@@ -5,6 +5,7 @@ python_pip_packages:
   - requests
 
 apt_packages:
+  - xfce4-panel-profiles
   - jq
   - pipx
   - ntpdate
