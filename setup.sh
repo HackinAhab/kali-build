@@ -20,7 +20,7 @@ sudo python3 -m pip install ansible
 line_break "Ansible Installed"
 
 line_break "Installing ansible-galaxy roles"
-ansible-galaxy install requirements.yml
+ansible-galaxy install -r requirements.yml
 line_break "Roles Installed"
 
 sudo whoami > /dev/null
