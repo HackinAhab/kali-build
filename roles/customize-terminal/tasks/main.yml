@@ -27,10 +27,5 @@
     state: link
     force: true
 
-# - name: "Copy xfce4 files"
-#   copy:
-#     src: "{{ role_path }}/files/xfce4"
-#     dest: "{{ ansible_env.HOME }}/.config/"
-
 - name: "Load XFCE4 Profile"
   shell: "xfce4-panel-profiles load {{ role_path }}/files/xfce4-custom.tar.bz2"
