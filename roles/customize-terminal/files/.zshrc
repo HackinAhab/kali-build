@@ -269,8 +269,13 @@ fi
 
 source $HOME/.zsh_aliases
 # source .zsh_logging
+
 export HISTTIMEFORMAT="%d/%m/%y %T  "
+# Additional path variables
 export PATH="$HOME/.local/bin:$PATH"
+if [ -f $HOME/.krew/bin/kubectl-krew ]; then
+    export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+fi
 
 function check_eth { 
 	ethtool $1 

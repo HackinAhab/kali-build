@@ -1,0 +1,202 @@
+---
+- name: Install kubectl
+  block:
+  - name: Check if home directory exists
+    stat:
+      path: "{{ ansible_env.HOME }}"
+    register: home_dir
+
+  - name: Create home directory if it doesn't exist
+    file:
+      path: "{{ ansible_env.HOME }}"
+      state: directory
+    when: not home_dir.stat.exists
+
+  - name: Check for kubectl binary in home directory
+    stat:
+      path: "{{ ansible_env.HOME }}/kubectl"
+    register:
+      kubectl_binary_home
+
+  - name: Check for kubectl checksum in home directory
+    stat:
+      path: "{{ ansible_env.HOME }}/kubectl"
+    register:
+      kubectl_chksum_home
+
+  - name: Delete kubectl binary from home directory
+    file:
+      path: "{{ ansible_env.HOME }}/kubectl"
+      state: absent
+    when: kubectl_binary_home.stat.exists
+
+  - name: Delete checksum file from home directory
+    file:
+      path: "{{ ansible_env.HOME }}/kubectl.sha256"
+      state: absent
+    when: kubectl_chksum_home.stat.exists
+
+  - name: Get latest kubectl version
+    uri:
+      url: https://dl.k8s.io/release/stable.txt
+      return_content: yes
+      status_code: 200, 304
+    register: version
+
+  - name: Download the latest kubectl release
+    uri:
+      url: "https://dl.k8s.io/release/{{ version.content }}/bin/linux/amd64/kubectl"
+      dest: "{{ ansible_env.HOME }}"
+      status_code: 200, 304
+    register: kubectl
+
+  - name: Download the kubectl checksum file
+    uri:
+      url: https://dl.k8s.io/{{ version.content }}/bin/linux/amd64/kubectl.sha256
+      dest: "{{ ansible_env.HOME }}"
+      status_code: 200, 304
+
+  - name: Validate the kubectl binary against the checksum file
+    shell: echo "$(cat {{ ansible_env.HOME }}/kubectl.sha256)"
+    register: source_chksum
+
+  - name: Compute new checksum of kubectl binary
+    shell: sha256sum {{ ansible_env.HOME }}/kubectl | awk '{print $1}'
+    register: new_chksum
+
+  - name: Assert that the kubectl binary is OK
+    vars:
+      expected: "kubectl: OK"
+    assert:
+      that:
+        - source_chksum.stdout == new_chksum.stdout
+      fail_msg: "Checksum does not match {{ source_chksum.stdout }} != {{ new_chksum.stdout }}"
+      success_msg: "Successfully validated"
+
+  - name: Check if kubectl installed in /usr/local/bin
+    stat:
+      path: /usr/local/bin/kubectl
+    register: kubectl_binary_usr_local_bin
+
+  - name: Delete kubectl binary from /usr/local/bin if it exists
+    file:
+      path: /usr/local/bin/kubectl
+      state: absent
+    become: true
+    become_method: sudo
+    when: kubectl_binary_home.stat.exists
+
+  - name: Copy kubectl and change permissions
+    copy:
+      src: "{{ kubectl.path }}"
+      remote_src: yes
+      dest: /usr/local/bin/kubectl
+      owner: root
+      group: root
+      mode: "+x"
+    become: true
+    become_method: sudo
+
+  - name: Check if kubectl is installed
+    shell: kubectl version --client
+    register: client
+    failed_when: client.rc > 1
+
+  - name: remove downloaded binaries from home
+    file:
+      path: "{{ ansible_env.HOME }}/kubectl"
+      state: absent
+
+  - name: remove downloaded checksums from home
+    file:
+      path: "{{ ansible_env.HOME }}/kubectl.sha256"
+      state: absent
+
+- name: "Install Krew (kubectl plugin manager)"
+  block:
+  - name: Remove exisiting krew directory
+    file:
+      path: "{{ ansible_env.HOME }}/.krew"
+      state: absent
+
+  - name: Create krew directory if it doesn't exist
+    file:
+      path: "{{ ansible_env.HOME }}/.krew"
+      state: directory
+
+  - name: Download krew binary
+    uri:
+      url: https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-linux_amd64.tar.gz
+      dest: "{{ ansible_env.HOME }}"
+      status_code: 200, 304
+    register: krew
+  
+  - name: Download krew checksum
+    uri:
+      url: https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-linux_amd64.tar.gz.sha256
+      dest: "{{ ansible_env.HOME }}"
+      status_code: 200, 304
+    register: krew_chksum
+
+  - name: Validate the krew binary against the checksum file
+    shell: echo "$(cat {{ ansible_env.HOME }}/krew-linux_amd64.tar.gz.sha256)"
+    register: krew_source_chksum
+
+  - name: Compute new checksum of kubectl binary
+    shell: sha256sum {{ ansible_env.HOME }}/krew-linux_amd64.tar.gz | awk '{print $1}'
+    register: krew_new_chksum
+
+  - name: Assert that the krew binary is OK
+    vars:
+      expected: "krew-linux_amd64.tar.gz: OK"
+    assert:
+      that:
+        - krew_source_chksum.stdout == krew_new_chksum.stdout
+      fail_msg: "Checksum does not match {{ krew_source_chksum.stdout }} != {{ krew_new_chksum.stdout }}"
+      success_msg: "Successfully validated"
+
+  - name: Extract krew binary
+    unarchive:
+      src: "{{ ansible_env.HOME }}/krew-linux_amd64.tar.gz"
+      dest: "{{ ansible_env.HOME }}"
+      remote_src: yes
+  
+  - name: Run install command
+    shell: "{{ ansible_env.HOME }}/krew-linux_amd64 install krew"
+    args:
+      creates: "{{ ansible_env.HOME }}/.krew/bin/kubectl-krew"
+  
+  - name: remove downloaded files from home
+    file:
+      path: "{{ ansible_env.HOME }}/{{ item }}"
+      state: absent
+    loop:
+      - krew-linux_amd64.tar.gz.sha256
+      - krew-linux_amd64
+      - krew-linux_amd64.tar.gz
+      - LICENSE
+  
+  - name: Check if krew is installed
+    shell: kubectl krew version
+    register: krew_version
+    failed_when: krew_version.rc > 1
+
+- name: "Install kubectl plugins"
+  block:
+  - name: Install kubectl plugins
+    shell: kubectl krew install ctx ns tree
+    args:
+      creates: "{{ ansible_env.HOME }}/.krew/bin/kubectl-{{ item }}"
+    loop:
+      - ctx
+      - ns
+      - tree
+  - name: Check if kubectl plugins are installed
+    shell: kubectl krew list
+    register: krew_list
+    failed_when: krew_list.rc > 1
+
+  - name: Check if kubectl plugins are installed
+    debug:
+      msg: "kubectl plugins installed: {{ krew_list.stdout }}"
+
