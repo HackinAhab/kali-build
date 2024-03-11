@@ -100,14 +100,15 @@ configure_prompt() {
     #[ "$EUID" -eq 0 ] && prompt_symbol=💀
     case "$PROMPT_ALTERNATIVE" in
         twoline)
-	    
-	    if ethtool tun0 &> /dev/null; then 
-	    	INTERFACE=$(ifconfig | grep -A 1 'tun0:' | grep inet | awk '{print $2}')
-	    else
-	    	INTERFACE=$(ifconfig | grep -A 1 'eth0:' | grep inet | awk '{print $2}')
-	   fi
-	    ADDINFO='%F{%(#.blue.green)}[%D{%m/%f/%y} %D{%H:%M:%Z}]  [ $INTERFACE ]'
-            PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}(%B%F{%(#.red.blue)}%n '$prompt_symbol$'%m%b%F{%(#.blue.green)}) - [%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]  '$ADDINFO$'\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+        function check_interface { 
+            if ethtool tun0 &> /dev/null; then 
+                ip a | grep -A 3 'tun0:' | grep inet |  cut -d' ' -f6| cut -d '/' -f 1
+            else
+                ip a | grep -A 3 'eth0:' | grep inet |  cut -d' ' -f6| cut -d '/' -f 1
+            fi
+        }
+	   ADDINFO='%F{%(#.blue.green)}[%D{%m/%f/%y} %D{%H:%M:%Z}]-[`check_interface`]'
+            PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]-'$ADDINFO$'\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
             # Right-side prompt with exit codes and background processes
             #RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
             ;;
@@ -276,7 +277,3 @@ export PATH="$HOME/.local/bin:$PATH"
 if [ -f $HOME/.krew/bin/kubectl-krew ]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 fi
-
-function check_eth { 
-	ethtool $1 
-}
