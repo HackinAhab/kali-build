@@ -6,6 +6,7 @@ python_pip_packages:
 
 apt_packages:
   - xfce4-panel-profiles
+  - unzip
   - jq
   - pipx
   - ntpdate

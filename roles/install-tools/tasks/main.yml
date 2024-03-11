@@ -8,3 +8,4 @@
 - include_tasks: docker.yml
 - include_tasks: obsidian.yml
 - include_tasks: kubectl.yml
+- include_tasks: cyber-chef.yml

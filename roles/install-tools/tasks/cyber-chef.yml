@@ -1,0 +1,37 @@
+---
+- name: Get latest release number of CyberChef
+  shell: 
+    cmd: curl -I -s -L https://github.com/gchq/CyberChef/releases/latest/download | grep -i location | awk -F '/' '{print $NF}'
+    executable: /bin/bash
+  register: cyberchef_version
+
+- name: Download latest Cyberchef release
+  uri:
+    url: "https://github.com/gchq/CyberChef/releases/latest/download/CyberChef_{{ cyberchef_version.stdout }}.zip"
+    dest: "/tmp/"
+    status_code: 200, 304
+
+- name: Create Destination Directory
+  file:
+    path: "/opt/CyberChef/"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+    mode: 0755
+  become: true
+  become_method: sudo
+
+- name: Unzip CyberChef
+  unarchive:
+    src: "/tmp/CyberChef_{{ cyberchef_version.stdout }}.zip"
+    dest: "/opt/CyberChef/"
+    remote_src: yes
+    creates: "/tmp/CyberChef_{{ cyberchef_version.stdout }}.html"
+  become: true
+  become_method: sudo
+
+- name: Clean up downloaded zip file
+  file:
+    path: "/tmp/CyberChef_{{ cyberchef_version.stdout }}.zip"
+    state: absent
