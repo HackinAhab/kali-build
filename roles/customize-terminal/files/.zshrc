@@ -107,7 +107,12 @@ configure_prompt() {
                 ip a | grep -A 3 'eth0:' | grep inet |  cut -d' ' -f6| cut -d '/' -f 1
             fi
         }
-	   ADDINFO='%F{%(#.blue.green)}[%D{%m/%f/%y} %D{%H:%M:%Z}]-[`check_interface`]'
+        function check_target {
+            if [ "$TARGET" ]; then
+                echo "-[target:$TARGET]"
+            fi
+        }
+	   ADDINFO='%F{%(#.blue.green)}[%D{%m/%f/%y} %D{%H:%M:%Z}]-[`check_interface`]`check_target`%f'
             PROMPT=$'%F{%(#.blue.green)}┌──${debian_chroot:+($debian_chroot)─}${VIRTUAL_ENV:+($(basename $VIRTUAL_ENV))─}(%B%F{%(#.red.blue)}%n'$prompt_symbol$'%m%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]-'$ADDINFO$'\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
             # Right-side prompt with exit codes and background processes
             #RPROMPT=$'%(?.. %? %F{red}%B⨯%b%F{reset})%(1j. %j %F{yellow}%B⚙%b%F{reset}.)'
@@ -272,8 +277,10 @@ source $HOME/.zsh_aliases
 # source .zsh_logging
 
 export HISTTIMEFORMAT="%d/%m/%y %T  "
+
 # Additional path variables
 export PATH="$HOME/.local/bin:$PATH"
+
 if [ -f $HOME/.krew/bin/kubectl-krew ]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 fi

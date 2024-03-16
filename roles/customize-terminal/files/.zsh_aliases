@@ -46,3 +46,4 @@ alias bat='batcat'
 alias g="git"
 alias c="clear"
 alias h="history"
+alias unset_t="unset TARGET"
