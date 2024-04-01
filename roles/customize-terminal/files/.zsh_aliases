@@ -14,6 +14,14 @@ gowitness-up () {
 	docker compose -f /opt/gowitness/docker-compose.yml up -d --force-recreate
 }
 
+set-tar () {
+	echo TARGET=$1 > $HOME/.target
+}
+
+uset-tar () {
+	rm $HOME/.target
+}
+
 alias sudo='sudo '
 
 #Ansible

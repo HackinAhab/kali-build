@@ -108,8 +108,9 @@ configure_prompt() {
             fi
         }
         function check_target {
-            if [ "$TARGET" ]; then
-                echo "-[target:$TARGET]"
+            if [[ -f "$HOME/.target" ]]; then
+		 source $HOME/.target
+                 echo "-[target:$TARGET]"
             fi
         }
 	   ADDINFO='%F{%(#.blue.green)}[%D{%m/%f/%y} %D{%H:%M:%Z}]-[`check_interface`]`check_target`%f'
