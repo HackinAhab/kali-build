@@ -1,0 +1,47 @@
+---
+- name: Move Gowitness to /opt
+  copy: 
+    src: "{{ role_path }}/files/gowitness"
+    dest: /opt/
+    mode: 0755
+  become: true
+  become_method: sudo
+
+- name: Docker Compose up gowitness
+  community.docker.docker_compose_v2:
+    project_src: "/opt/gowitness"
+    state: present
+  register: output
+  become: true
+
+- name: Move Bloodhound to /opt
+  copy: 
+    src: "{{ role_path }}/files/bloodhound"
+    dest: /opt/
+    mode: 0755
+  become: true
+  become_method: sudo
+
+- name: Generate Random Password
+  shell: "openssl rand -hex 16"
+  register: random_password
+  become: true
+
+- name: Set Random Password
+  lineinfile:
+    path: "/opt/bloodhound/.env"
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+    state: present
+  become: true
+  loop:
+    - {regexp: "^POSTGRES_PASSWORD=bloodhoundcommunityedition", line: "POSTGRES_PASSWORD={{ random_password.stdout }}"}
+    - {regexp: "^NEO4J_SECRET=bloodhoundcommunityedition", line: "NEO4J_SECRET={{ random_password.stdout }}"}
+
+
+- name: Docker Compose up bloodhound
+  community.docker.docker_compose_v2:
+    project_src: "/opt/bloodhound"
+    state: present
+  register: output
+  become: true

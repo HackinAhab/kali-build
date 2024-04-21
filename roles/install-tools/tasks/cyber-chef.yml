@@ -4,12 +4,27 @@
     cmd: curl -I -s -L https://github.com/gchq/CyberChef/releases/latest/download | grep -i location | awk -F '/' '{print $NF}'
     executable: /bin/bash
   register: cyberchef_version
+  changed_when: false
+
+- name: Get Currently installed CyberChef version
+  shell: 
+    cmd: ls /opt/CyberChef/ | grep -i html | awk -F '_' '{print $2}' | cut -d '.' -f1-3
+    executable: /bin/bash
+  register: current_cyberchef_version
+  changed_when: false
+
+- name: Remove outdated CyberChef
+  file:
+    path: "/opt/CyberChef/"
+    state: absent
+  when: cyberchef_version.stdout != current_cyberchef_version.stdout
 
 - name: Download latest Cyberchef release
   uri:
     url: "https://github.com/gchq/CyberChef/releases/latest/download/CyberChef_{{ cyberchef_version.stdout }}.zip"
     dest: "/tmp/"
     status_code: 200, 304
+  when: cyberchef_version.stdout != current_cyberchef_version.stdout
 
 - name: Create Destination Directory
   file:
@@ -30,8 +45,10 @@
     creates: "/tmp/CyberChef_{{ cyberchef_version.stdout }}.html"
   become: true
   become_method: sudo
+  when: cyberchef_version.stdout != current_cyberchef_version.stdout
 
 - name: Clean up downloaded zip file
   file:
     path: "/tmp/CyberChef_{{ cyberchef_version.stdout }}.zip"
     state: absent
+  when: cyberchef_version.stdout != current_cyberchef_version.stdout

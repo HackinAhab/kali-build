@@ -63,18 +63,3 @@
     enabled: true
   become: true
   become_method: sudo
-
-- name: Move Gowitness to /opt
-  copy: 
-    src: "{{ role_path }}/files/gowitness"
-    dest: /opt/
-    mode: 0755
-  become: true
-  become_method: sudo
-
-- name: Docker Compose up gowitness
-  community.docker.docker_compose_v2:
-    project_src: "/opt/gowitness"
-    state: present
-  register: output
-  become: true

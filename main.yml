@@ -6,7 +6,7 @@
     - role: "roles/install-tools"
     - role: "roles/configure-tmux"
     - role: "roles/customize-browser"
-    # - role: "roles/configure-logging"
+    - role: "roles/configure-logging"
     - role: gantsign.visual-studio-code
     - role: "roles/configure-system"
     - role: "roles/customize-terminal"
@@ -18,10 +18,21 @@
             - GitHub.copilot
             - snyk-security.snyk-vulnerability-scanner
   post_tasks:
+  - name: "Confirm restart lightdm"
+    pause:
+      prompt: "Are you ready to restart lightdm? (yes/no)"
+    register: restart_lightdm
+
   - name: "Restart lightdm"
     become: true
     become_method: sudo
     service:
       name: lightdm
       state: restarted
+    when: restart_lightdm.user_input == "yes"
+
+  - name: "Restart lightdm When Ready"
+    pause: 
+      prompt: "Please restart lightdm when ready to apply changes"
+    when: restart_lightdm.user_input == "no"  
 

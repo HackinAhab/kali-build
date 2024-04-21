@@ -6,20 +6,6 @@
     user_install: false
   with_items:
     - "{{ gem_packages }}"
-  #   - logger
-  #   - stringio
-  #   - winrm
-  #   - builder
-  #   - erubi
-  #   - gssapi
-  #   - gyoku
-  #   - httpclient
-  #   - logging
-  #   - little-plugger
-  #   - nori
-  #   - rubyntlm
-  #   - winrm-fs
-  #   - evil-winrm
   become: true
   become_method: sudo
 
