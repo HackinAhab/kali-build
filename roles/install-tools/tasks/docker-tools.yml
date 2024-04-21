@@ -14,6 +14,12 @@
   register: output
   become: true
 
+- name: Check if Bloodhound .env exists
+  stat:
+    path: "/opt/bloodhound/.env"
+  register: bloodhound_installed
+  become: true
+
 - name: Move Bloodhound to /opt
   copy: 
     src: "{{ role_path }}/files/bloodhound"
@@ -21,11 +27,13 @@
     mode: 0755
   become: true
   become_method: sudo
+  when: bloodhound_installed.stat.exists == False
 
 - name: Generate Random Password
   shell: "openssl rand -hex 16"
   register: random_password
   become: true
+  when: bloodhound_installed.stat.exists == False
 
 - name: Set Random Password
   lineinfile:
@@ -37,7 +45,7 @@
   loop:
     - {regexp: "^POSTGRES_PASSWORD=bloodhoundcommunityedition", line: "POSTGRES_PASSWORD={{ random_password.stdout }}"}
     - {regexp: "^NEO4J_SECRET=bloodhoundcommunityedition", line: "NEO4J_SECRET={{ random_password.stdout }}"}
-
+  when: bloodhound_installed.stat.exists == False
 
 - name: Docker Compose up bloodhound
   community.docker.docker_compose_v2:

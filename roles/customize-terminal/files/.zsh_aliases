@@ -46,7 +46,7 @@ alias kall='kubectl api-resources --verbs=list --namespaced -o name  | xargs -n 
 
 # Docker
 alias d="docker"
-alias dc="docker-compose"
+alias dc="docker compose"
 
 #General
 alias update='sudo apt update && sudo apt upgrade'
