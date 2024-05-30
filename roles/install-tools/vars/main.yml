@@ -29,6 +29,7 @@ apt_packages:
   - shellter
   - wine
   - libkrb5-dev
+  - krb5-user
 
 pipx_packages:
     - { name: 'impacket', source: 'git+https://github.com/fortra/impacket.git' }
