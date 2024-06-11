@@ -1,0 +1,28 @@
+- name: "Copying clipman autostart"
+  copy:
+    src: "{{ role_path }}/files/xfce4-clipman-plugin-autostart.desktop"
+    dest: "{{ ansible_env.HOME }}/.config/autostart/xfce4-clipman-plugin-autostart.desktop"
+    force: true
+
+- name: Register xfce config files
+  find:
+    paths: "{{ role_path }}/files/xfce-perchannel-xml"
+  register: find
+
+- name: Copy xfce settings
+  file:
+    src: "{{ item.path }}"
+    dest: "{{ ansible_env.HOME }}/.config/xfce4/xfconf/xfce-perchannel-xml/{{ item.path | basename }}"
+    state: link
+    force: true
+  with_items: "{{ find.files }}"
+
+- name: "Disable power manager"
+  become: true
+  become_method: sudo
+  ansible.builtin.command: xfconf-query -c xfce4-power-manager -p '/xfce4-power-manager/dpms-enabled' -t 'bool' -s 'false' --create
+
+- name: "Disable screen lock"
+  become: true
+  become_method: sudo
+  ansible.builtin.command: xfconf-query -c xfce4-power-manager -p '/xfce4-power-manager/lock-screen-suspend-hibernate' -t 'bool' -s 'false' --create

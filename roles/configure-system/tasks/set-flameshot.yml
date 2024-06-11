@@ -1,6 +1,0 @@
----
-- name: Set Screenshot Tool
-  become: true
-  become_method: sudo
-  ansible.builtin.command: xfconf-query -c xfce4-keyboard-shortcuts -p '/commands/custom/Print' -s 'flameshot gui'
-  changed_when: false

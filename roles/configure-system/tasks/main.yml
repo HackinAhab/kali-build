@@ -1,6 +1,6 @@
 ---
 - include_tasks: "configure-sudoers.yml"
-- include_tasks: "set-flameshot.yml"
+- include_tasks: "configure-xfce.yml"
 - include_tasks: "set-autologin.yml"
 - include_tasks: "set-timezone.yml"
 - include_tasks: "initialize-msfdb.yml"
