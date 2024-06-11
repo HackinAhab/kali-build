@@ -30,6 +30,10 @@ apt_packages:
   - wine
   - libkrb5-dev
   - krb5-user
+  - peass
+  - rsyslog
+  - ufw
+  - seclists
 
 pipx_packages:
     - { name: 'impacket', source: 'git+https://github.com/fortra/impacket.git' }
@@ -44,6 +48,7 @@ github_releases:
     - { repo: "carlospolop/PEASS-ng",  regex: "linpeas.sh", location: "/opt/peas" }
     - { repo: "carlospolop/PEASS-ng",  regex: "winPEASx64.exe", location: "/opt/peas" }
     - { repo: "WithSecureLabs/chainsaw",  regex: "chainsaw_all_", location: "/opt/" }
+    - { repo: "ropnop/kerbrute", regex: "kerbrute_linux_amd64", location: "/opt/kerbrute" }
     # - { repo: "BloodHoundAD/BloodHound", regex: "BloodHound-linux-x64.zip", location: "/opt/" }
 
 github_repos:
