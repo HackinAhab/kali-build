@@ -181,24 +181,24 @@
     register: krew_version
     failed_when: krew_version.rc > 1
 
-- name: "Install kubectl plugins"
-  block:
-  - name: Install kubectl plugins
-    shell: kubectl krew install ctx ns tree
-    args:
-      executable: /bin/zsh
-      creates: "{{ ansible_env.HOME }}/.krew/bin/kubectl-{{ item }}"
-    loop:
-      - ctx
-      - ns
-      - tree
+  - name: "Install kubectl plugins"
+    block:
+    - name: Install kubectl plugins
+      shell: {{ ansible_env.HOME }}/.krew/bin/kubectl-krew install ctx ns tree
+      args:
+        executable: /bin/zsh
+        creates: "{{ ansible_env.HOME }}/.krew/bin/kubectl-{{ item }}"
+      loop:
+        - ctx
+        - ns
+        - tree
 
-  - name: Check if kubectl plugins are installed
-    shell: kubectl krew list
-    register: krew_list
-    failed_when: krew_list.rc > 1
+    - name: Check if kubectl plugins are installed
+      shell: kubectl krew list
+      register: krew_list
+      failed_when: krew_list.rc > 1
 
-  - name: Check if kubectl plugins are installed
-    debug:
-      msg: "kubectl plugins installed: {{ krew_list.stdout }}"
+    - name: Check if kubectl plugins are installed
+      debug:
+        msg: "kubectl plugins installed: {{ krew_list.stdout }}"
 

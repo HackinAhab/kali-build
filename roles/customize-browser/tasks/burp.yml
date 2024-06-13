@@ -22,8 +22,8 @@
     owner: root
     group: root
     mode: 0644
-    become: true
-    become_method: sudo
+  become: true
+  become_method: sudo
   when: burp_cert.stat.exists == False
 
 - name: Create directory for Burp Suite extras
