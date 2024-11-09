@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env zsh
 
 function line_break () {
     word=$1
@@ -16,15 +16,15 @@ function line_break () {
 
 
 line_break "Installing ansible via pip"
-sudo python3 -m pip install ansible
+sudo apt install ansible
 line_break "Ansible Installed"
 
 line_break "Installing ansible-galaxy roles"
-ansible-galaxy install -r requirements.yml
+/usr/local/bin/ansible-galaxy install -r requirements.yml
 line_break "Roles Installed"
 
 sudo whoami > /dev/null
 
 line_break "Running playbook"
-ansible-playbook main.yml
+/usr/local/bin/ansible-playbook main.yml
 line_break "Playbook complete!"

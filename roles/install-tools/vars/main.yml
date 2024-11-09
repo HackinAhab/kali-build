@@ -1,9 +1,9 @@
 ---
 # vars file for install-tools
-python_pip_packages:
-  - pwntools
-  - requests
-  - bloodyAD
+# python_pip_packages:
+#   - pwntools
+#   - requests
+#   - bloodyAD
 
 apt_packages:
   - xfce4-panel-profiles
@@ -32,15 +32,16 @@ apt_packages:
   - krb5-user
   - peass
   - rsyslog
-  - ufw
   - seclists
   - pandoc
+  - python3-pwntools
 
 pipx_packages:
     - { name: 'impacket', source: 'git+https://github.com/fortra/impacket.git' }
     - { name: 'netexec', source: 'git+https://github.com/Pennyw0rth/NetExec' }
     - { name: 'certipy-ad', source: 'git+https://github.com/ly4k/Certipy.git' }
     - { name: 'bloodhound', source: 'git+https://github.com/dirkjanm/BloodHound.py.git@bloodhound-ce' }
+    - { name: 'adidnsdump', source: 'git+https://github.com/dirkjanm/adidnsdump#egg=adidnsdump' }
 
 github_releases:
     - { repo: "jpillora/chisel",  regex: "_linux_amd64.gz", location: "/opt/chisel" }
@@ -55,6 +56,8 @@ github_releases:
 github_repos:
     - { repo: "https://github.com/danielmiessler/SecLists", location: "/opt/SecLists" }
     - { repo: "https://github.com/WithSecureLabs/awspx", location: "/opt/awspx" }
+    - { repo: "https://github.com/dirkjanm/krbrelayx", location: "/opt/krbrelayx" }
+    - { repo: "https://github.com/icsharpcode/ILSpy", location: "/opt/ILSpy"}
 
 gem_packages:
   - logger

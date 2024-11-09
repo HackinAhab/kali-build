@@ -184,7 +184,7 @@
   - name: "Install kubectl plugins"
     block:
     - name: Install kubectl plugins
-      shell: {{ ansible_env.HOME }}/.krew/bin/kubectl-krew install ctx ns tree
+      shell: "{{ ansible_env.HOME }}/.krew/bin/kubectl-krew install ctx ns tree"
       args:
         executable: /bin/zsh
         creates: "{{ ansible_env.HOME }}/.krew/bin/kubectl-{{ item }}"

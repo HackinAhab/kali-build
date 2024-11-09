@@ -17,6 +17,8 @@
   file:
     path: "/opt/CyberChef/"
     state: absent
+  become: true
+  become_method: sudo
   when: cyberchef_version.stdout != current_cyberchef_version.stdout
 
 - name: Download latest Cyberchef release
@@ -33,7 +35,6 @@
     mode: 0755
     owner: root
     group: root
-    mode: 0755
   become: true
   become_method: sudo
 

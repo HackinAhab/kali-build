@@ -7,8 +7,8 @@
   with_items:
     - "{{ pipx_packages }}"
 
-- name: Install Python Pip Packages
-  ansible.builtin.pip:
-    name: "{{ python_pip_packages}}"
-    state: latest
-    executable: pip3
+# - name: Install Python Pip Packages
+#   ansible.builtin.pip:
+#     name: "{{ python_pip_packages}}"
+#     state: latest
+#     executable: pip3

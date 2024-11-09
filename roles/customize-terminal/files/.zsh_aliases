@@ -56,3 +56,7 @@ alias c="clear"
 alias h="history"
 alias unset_t="unset TARGET"
 alias jwtdc='jq -R "split(\".\") |.[0:2] | map(@base64d) | map(fromjson)"'
+
+set-tun () {
+	tun=$(ip a | awk '/inet/ && /tun0/{sub(/\/.*$/,"",$2); print $2}')
+}

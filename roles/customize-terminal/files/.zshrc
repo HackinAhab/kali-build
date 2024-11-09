@@ -101,10 +101,10 @@ configure_prompt() {
     case "$PROMPT_ALTERNATIVE" in
         twoline)
         function check_interface { 
-            if ethtool tun0 &> /dev/null; then 
-                ip a | grep -A 3 'tun0:' | grep inet |  cut -d' ' -f6| cut -d '/' -f 1
+            if ethtool tun0 &> /dev/null; then
+            	echo 'tun0:'$(ip -4 -br address show tun0 | cut -d ' ' -f22)
             else
-                ip a | grep -A 3 'eth0:' | grep inet |  cut -d' ' -f6| cut -d '/' -f 1
+		        echo 'eth0:'$(ip -4 -br address show eth0 | cut -d ' ' -f27)
             fi
         }
         function check_target {
@@ -285,3 +285,11 @@ export PATH="$HOME/.local/bin:$PATH"
 if [ -f $HOME/.krew/bin/kubectl-krew ]; then
     export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 fi
+
+log_cmds(){
+    echo "$(date '+%Y-%m-%d %H:%M:%S') `ip -4 -br address show eth0 | cut -d ' ' -f27` - $1" >> $HOME/$(date '+%Y-%m-%d')-cmd.log
+}
+
+preexec() {
+   log_cmds "$1";
+}
